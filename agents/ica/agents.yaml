@@ -1,0 +1,32 @@
+# ICA Agentic Studio – Agent Orchestration definitions
+# Mirrors specs/contracts/prompts/*.md. Create in ICA > Agentic Studio > New Agent (Orchestration Wizard),
+# select tools from the MCP catalogue (clearview-complaints-tools), then export each agent as an MCP endpoint / Agent Card.
+orchestration:
+  name: clearview-complaints-swarm
+  pattern: sequential
+  trigger: complaint_received
+  validate_handshakes_against: specs/contracts/schemas
+  on_error: route_to_human_review
+  agents:
+    - name: triage-agent
+      prompt_contract: specs/contracts/prompts/triage_agent.md
+      output_schema: specs/contracts/schemas/triage_output.schema.json
+      tools: [secure-query-executor, context-broker-hybrid-query, audit-logger]
+      context_studio_node_types: [Intent, VulnerabilityMarker, LegalThreatMarker, SLATier, Channel]
+    - name: evidence-agent
+      prompt_contract: specs/contracts/prompts/evidence_agent.md
+      output_schema: specs/contracts/schemas/evidence_output.schema.json
+      tools: [secure-query-executor, audit-logger]
+    - name: policy-agent
+      prompt_contract: specs/contracts/prompts/policy_agent.md
+      output_schema: specs/contracts/schemas/policy_output.schema.json
+      tools: [context-broker-hybrid-query, audit-logger]
+      context_studio_node_types: [RegulatoryRule, PolicyRule, RedressBand, AuthorityLevel, Precedent]
+    - name: draft-agent
+      prompt_contract: specs/contracts/prompts/draft_agent.md
+      output_schema: specs/contracts/schemas/draft_output.schema.json
+      tools: [secure-query-executor, notification-service, audit-logger]
+  hard_rules:
+    - vulnerable_customer_requires_human_review
+    - redress_over_150_requires_human_review
+    - never_send_without_stp_or_human_approval

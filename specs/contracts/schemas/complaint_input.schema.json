@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://clearview.example/schemas/complaint_input.schema.json",
+  "title": "ComplaintInput (pipeline entry / Triage input)",
+  "type": "object",
+  "required": ["id", "customer_id", "account_id", "channel", "text", "received_at", "src_due", "fca_deadline"],
+  "properties": {
+    "id": {"type": "string", "pattern": "^CMP-[0-9]{5,}$"},
+    "customer_id": {"type": "string"},
+    "account_id": {"type": "string"},
+    "channel": {"enum": ["Branch", "Call Centre", "Mobile App", "Email", "Social Media"]},
+    "text": {"type": "string", "minLength": 10, "maxLength": 5000},
+    "received_at": {"type": "string", "format": "date-time"},
+    "src_due": {"type": "string", "format": "date-time", "description": "DISP 1.4: 3 business days"},
+    "fca_deadline": {"type": "string", "format": "date-time", "description": "DISP 1.6: 8 weeks"}
+  },
+  "additionalProperties": true
+}

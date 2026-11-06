@@ -1,0 +1,31 @@
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: clearview
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change-me-locally}
+      POSTGRES_DB: clearview
+    volumes:
+      - ./db/schema.postgres.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      - pgdata:/var/lib/postgresql/data
+    ports: ["5432:5432"]
+  backend:
+    build: ./backend
+    environment:
+      CLEARVIEW_DB: /data/clearview.db
+    volumes:
+      - dbdata:/data
+      - ./context-studio:/app/context-studio:ro
+      - ./specs:/app/specs:ro
+      - ./db:/app/db:ro
+    ports: ["8000:8000"]
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        NEXT_PUBLIC_API: http://localhost:8000
+    ports: ["3000:3000"]
+    depends_on: [backend]
+volumes:
+  pgdata:
+  dbdata:

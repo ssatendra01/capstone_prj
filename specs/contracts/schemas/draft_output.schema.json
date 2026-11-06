@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://clearview.example/schemas/draft_output.schema.json",
+  "title": "DraftOutput (final agent output / HITL input)",
+  "type": "object",
+  "required": ["complaint_id", "letter_type", "letter", "stp_eligible", "hitl_required", "hitl_reasons", "guardrails",
+               "final_confidence", "dispatch", "audit_summary"],
+  "properties": {
+    "complaint_id": {"type": "string"},
+    "letter_type": {"enum": ["SUMMARY_RESOLUTION", "FINAL_RESPONSE_DRAFT"]},
+    "letter": {"type": "string", "minLength": 100},
+    "stp_eligible": {"type": "boolean"},
+    "hitl_required": {"type": "boolean"},
+    "hitl_reasons": {"type": "array", "items": {"enum": ["VULNERABLE_CUSTOMER", "LEGAL_THREAT", "FCA_DEADLINE_RISK", "REDRESS_OVER_150",
+        "DATA_PRIVACY_DPO_REVIEW", "UNKNOWN_INTENT", "REJECTION_REQUIRES_APPROVAL", "LOW_CONFIDENCE"]}},
+    "guardrails": {"type": "array", "items": {"type": "object", "required": ["type", "severity", "message"],
+      "properties": {"type": {"enum": ["VULNERABLE_CUSTOMER", "LEGAL_THREAT", "FCA_DEADLINE"]}, "severity": {"enum": ["critical", "high"]}, "message": {"type": "string"}}}},
+    "final_confidence": {"type": "number", "minimum": 0, "maximum": 1},
+    "dispatch": {"type": "object", "required": ["action", "channel", "recipient", "subject"],
+      "properties": {"action": {"enum": ["SEND", "HOLD_FOR_REVIEW"]}, "channel": {"enum": ["EMAIL", "SMS", "PUSH"]}, "recipient": {"type": "string"}, "subject": {"type": "string"}}},
+    "audit_summary": {"type": "string"}
+  },
+  "allOf": [
+    {"if": {"properties": {"stp_eligible": {"const": true}}}, "then": {"properties": {"hitl_required": {"const": false}, "hitl_reasons": {"maxItems": 0}, "dispatch": {"properties": {"action": {"const": "SEND"}}}}}},
+    {"if": {"properties": {"stp_eligible": {"const": false}}}, "then": {"properties": {"hitl_required": {"const": true}, "dispatch": {"properties": {"action": {"const": "HOLD_FOR_REVIEW"}}}}}}
+  ],
+  "additionalProperties": true
+}

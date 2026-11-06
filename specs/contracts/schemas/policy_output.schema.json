@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://clearview.example/schemas/policy_output.schema.json",
+  "title": "PolicyOutput (handshake Policy -> Draft)",
+  "type": "object",
+  "required": ["complaint_id", "outcome", "refund_amount", "compensation_amount", "redress_total", "authority_required",
+               "rules_cited", "citations", "confidence", "reasoning"],
+  "properties": {
+    "complaint_id": {"type": "string"},
+    "outcome": {"enum": ["uphold", "partial_uphold", "reject"]},
+    "refund_amount": {"type": "number", "minimum": 0},
+    "compensation_amount": {"type": "number", "minimum": 0},
+    "redress_total": {"type": "number", "minimum": 0},
+    "redress_band": {"type": ["string", "null"], "pattern": "^cv:Redress/"},
+    "authority_required": {"enum": ["cv:Authority/ANALYST", "cv:Authority/LEAD", "cv:Authority/MANAGER", "cv:Authority/EXECUTIVE"]},
+    "rules_cited": {"type": "array", "items": {"type": "string", "pattern": "^cv:Rule/"}},
+    "precedents": {"type": "array", "items": {"type": "string"}},
+    "citations": {"type": "array", "minItems": 1, "items": {"type": "string", "pattern": "^cv:"}},
+    "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+    "reasoning": {"type": "string", "minLength": 10}
+  },
+  "allOf": [
+    {"if": {"properties": {"outcome": {"const": "reject"}}}, "then": {"properties": {"redress_total": {"const": 0}}}}
+  ],
+  "additionalProperties": true
+}

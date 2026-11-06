@@ -1,0 +1,33 @@
+@use "@carbon/react";
+@use "@carbon/react/scss/spacing" as *;
+
+body { margin: 0; }
+.shell { padding: 4rem 1.5rem 3rem; max-width: 1800px; margin: 0 auto; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+.kpi { padding: 1rem; background: var(--cds-layer-01); border-left: 4px solid var(--cds-border-strong-01); }
+.kpi.danger { border-left-color: #da1e28; }
+.kpi.warn { border-left-color: #f1c21b; }
+.kpi.good { border-left-color: #24a148; }
+.kpi .label { font-size: .75rem; color: var(--cds-text-secondary); text-transform: uppercase; letter-spacing: .04em; }
+.kpi .value { font-size: 2rem; font-weight: 300; line-height: 1.2; }
+.filters { display: flex; gap: 1rem; flex-wrap: wrap; align-items: flex-end; margin-bottom: 1rem; }
+.filters > * { min-width: 160px; }
+.layout { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 1.5rem; align-items: start; }
+@media (max-width: 1200px) { .layout { grid-template-columns: 1fr; } }
+.panel { background: var(--cds-layer-01); padding: 1rem; }
+.row-click { cursor: pointer; }
+.row-sel td { background: var(--cds-layer-selected-01) !important; }
+.row-vuln td:first-child { box-shadow: inset 4px 0 0 #da1e28; }
+.mono { font-family: var(--cds-code-01-font-family, monospace); font-size: .8rem; }
+.pipeline { display: flex; align-items: stretch; gap: .5rem; margin: 1rem 0; flex-wrap: wrap; }
+.step { flex: 1; min-width: 130px; padding: .75rem; background: var(--cds-layer-02); border-top: 3px solid #24a148; }
+.step.ERROR { border-top-color: #da1e28; }
+.step h5 { margin: 0 0 .25rem; text-transform: capitalize; }
+.step small { color: var(--cds-text-secondary); display: block; }
+.letter { white-space: pre-wrap; background: var(--cds-layer-02); padding: 1rem; font-size: .875rem; max-height: 320px; overflow: auto; }
+.stack > * + * { margin-top: 1rem; }
+.audit-item { border-left: 2px solid var(--cds-border-strong-01); padding: .25rem 0 .25rem .75rem; margin-bottom: .5rem; }
+.audit-item pre { margin: .25rem 0 0; font-size: .7rem; white-space: pre-wrap; word-break: break-all; color: var(--cds-text-secondary); }
+.tags > * { margin-right: .25rem; }
+.empty { color: var(--cds-text-secondary); padding: 2rem; text-align: center; }
+.toolbar { display: flex; gap: .5rem; flex-wrap: wrap; margin-bottom: 1rem; }

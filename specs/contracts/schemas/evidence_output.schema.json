@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://clearview.example/schemas/evidence_output.schema.json",
+  "title": "EvidenceOutput (handshake Evidence -> Policy)",
+  "type": "object",
+  "required": ["complaint_id", "intent", "sources", "completeness", "confidence", "refund_candidate", "findings", "citations", "summary"],
+  "properties": {
+    "complaint_id": {"type": "string"},
+    "intent": {"type": "string"},
+    "sources": {"type": "array", "minItems": 1, "items": {"type": "object", "required": ["system", "query", "row_count"],
+      "properties": {"system": {"enum": ["T24", "CAMS", "SFDC", "VERINT", "POSTGRES"]}, "query": {"type": "string"},
+                     "row_count": {"type": "integer", "minimum": 0}, "required": {"type": "boolean"}}}},
+    "completeness": {"type": "number", "minimum": 0, "maximum": 1},
+    "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+    "refund_candidate": {"type": "number", "minimum": 0},
+    "findings": {"type": "object", "required": ["transactions_90d", "call_transcripts", "crm_cases", "prior_complaints"]},
+    "citations": {"type": "array", "items": {"type": "string", "pattern": "^cv:System/"}},
+    "summary": {"type": "string"}
+  },
+  "additionalProperties": true
+}

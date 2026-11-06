@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "clearview-complaints-tools": {
+      "command": "python",
+      "args": ["-m", "clearview.mcp_server"],
+      "cwd": "${workspaceFolder}/backend",
+      "alwaysAllow": ["context-broker-hybrid-query"],
+      "disabled": false
+    }
+  }
+}
